@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Prototype using data from https://open.fda.gov</title>
+
+    <!-- Bootstrap core css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
+
+</head>
+
+<body ng-app="myApp">
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="starter-template">
+        <h1>Visualization</h1>
+
+        <div class="col-lg-8 col-sm-12 ng-scope" id="bar-chart" ng-controller="BarCtrl">
+            <div class="panel panel-default">
+                <div class="panel-heading">Top 10 adverse reactions</div>
+                <div class="panel-body">
+                    <zingchart id="adverse-reactions-chart" zc-json="arObj" ></zingchart>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-sm-12 ng-scope" id="bar-chart" ng-controller="BarCtrl">
+            <div class="panel panel-default">
+                <div class="panel-heading">Top 10 drugs causing the reaction</div>
+                <div class="panel-body">
+                    <zingchart id="products-chart" zc-json="productsObj" ></zingchart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src='http://cdn.zingchart.com/zingchart.min.js'></script>
+    <script src="bower_components/zingchart-angularjs/src/zingchart-angularjs.js"></script>
+
+
+<script>
+    angular.module('myApp', ['zingchart-angularjs'])
+            .controller("BarCtrl", ['$scope', '$http', function ($scope, $http) {
+                var adverse_reaction_req = {
+                    method: 'GET',
+                    url: 'https://api.fda.gov/drug/event.json',
+                    params: {
+                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
+                        count: 'patient.reaction.reactionmeddrapt.exact',
+                        limit: '10'
+                    }
+                }
+
+                $http(adverse_reaction_req).
+                        success(function(data, status, headers, config) {
+
+                            var reactions = [];
+                            var i;
+                            for (i = 0; i < data.results.length; i++) {
+                                reactions.push(data.results[i].term);
+                            }
+
+                            var reactions_counts = [];
+                            for (i = 0; i < data.results.length; i++) {
+                                reactions_counts.push(data.results[i].count);
+                            }
+
+                            $scope.arObj = {
+                                type : 'bar',
+                                "plot":{
+                                    "selection-mode":"plot",
+                                    "background-mode":"none",
+                                    "selected-state":{
+                                        "background-color":"#900 #f90",
+                                        "border-color":"#999",
+                                        "border-width":1
+                                    }
+                                },
+                                "scale-x":{
+                                    "values": reactions,
+                                    "max-items":reactions.length,
+                                    "items-overlap":true,
+                                    "item":{
+                                        "font-angle":-45,
+                                        "auto-align":true
+                                    },
+                                    "guide":{
+                                        "visible":false
+                                    }
+
+
+                                },
+
+                                series:[
+                                    {
+                                        "values": reactions_counts,
+                                        "labels": reactions,
+                                        "tooltip": {
+                                          "text": "%kl - %v"
+                                        },
+                                        "backgroundColor" : "#007777"
+                                    },
+
+                                ]
+                            };
+
+                        }).
+                        error(function(data, status, headers, config) {
+                            $scope.results = [];
+                            console.log("Error while retrieving data")
+                        });
+
+                var adverse_reaction_product_req = {
+                    method: 'GET',
+                    url: 'https://api.fda.gov/drug/event.json',
+                    params: {
+                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
+                        count: 'patient.drug.medicinalproduct.exact',
+                        limit: '10',
+                        search: 'patient.reaction.reactionmeddrapt:"Nausea"',
+                    }
+                }
+
+                $http(adverse_reaction_product_req).
+                        success(function(data, status, headers, config) {
+
+                            var products = [];
+                            var i;
+                            for (i = 0; i < data.results.length; i++) {
+                                products.push(data.results[i].term);
+                            }
+
+                            var products_counts = [];
+                            for (i = 0; i < data.results.length; i++) {
+                                products_counts.push(data.results[i].count);
+                            }
+
+                            $scope.productsObj = {
+                                type : 'bar',
+                                "plot":{
+                                    "selection-mode":"plot",
+                                    "background-mode":"none",
+                                    "selected-state":{
+                                        "background-color":"#900 #f90",
+                                        "border-color":"#999",
+                                        "border-width":1
+                                    }
+                                },
+                                "scale-x":{
+                                    "values": products,
+                                    "max-items":products.length,
+                                    "items-overlap":true,
+                                    "item":{
+                                        "font-angle":-45,
+                                        "auto-align":true
+                                    },
+                                    "guide":{
+                                        "visible":false
+                                    }
+
+
+                                },
+
+                                series:[
+                                    {
+                                        "values": products_counts,
+                                        "labels": products,
+                                        "tooltip": {
+                                            "text": "%kl - %v"
+                                        },
+                                        "backgroundColor" : "#007777"
+                                    },
+
+                                ]
+                            };
+
+                        }).
+                        error(function(data, status, headers, config) {
+                            $scope.results = [];
+                            console.log("Error while retrieving data")
+                        });
+            }]);
+
+    zingchart.node_click = function(p) {
+        console.log(p);
+
+    }
+
+</script>
+
+</body>
+</html>

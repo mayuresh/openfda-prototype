@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Prototype using data from https://open.fda.gov</title>
+
+    <!-- Bootstrap core css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+
+
+</head>
+
+<body ng-app="myApp">
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container" ng-controller="BarCtrl">
+
+    <div class="starter-template">
+
+        <div class="col-lg-8 ng-scope" id="adverse-reaction-bar-chart">
+            <div class="panel panel-default">
+                <div class="panel-heading">Top 10 types of adverse reactions to drugs</div>
+                <div class="panel-body">
+                    <zingchart id="adverse-reactions-chart" zc-json="arObj"></zingchart>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 ng-scope" id="products-bar-chart" ng-show="selected_reaction">
+            <div class="panel panel-default">
+                <div class="panel-heading">Drugs causing the reaction - {{ selected_reaction }}</div>
+                <div class="panel-body">
+                    <zingchart id="products-chart" zc-json="productsObj"></zingchart>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 ng-scope" id="patient-pie-chart" ng-show="selected_product">
+            <div class="panel panel-default">
+                <div class="panel-heading">Gender distribution for adverse reaction {{ selected_reaction }} for drug {{ selected_product }}</div>
+                <div class="panel-body">
+                    <zingchart id="gender-pie-chart" zc-json="genderObj"></zingchart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src='http://cdn.zingchart.com/zingchart.min.js'></script>
+<script src="bower_components/zingchart-angularjs/src/zingchart-angularjs.js"></script>
+
+
+<script>
+    angular.module('myApp', ['zingchart-angularjs'])
+            .controller("BarCtrl", ['$scope', '$http', function ($scope, $http) {
+
+                $scope.selected_reaction = false;
+                $scope.selected_product = false;
+                var adverse_reaction_req = {
+                    method: 'GET',
+                    url: 'https://api.fda.gov/drug/event.json',
+                    params: {
+                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
+                        count: 'patient.reaction.reactionmeddrapt.exact',
+                        limit: '10'
+                    }
+                }
+
+                $http(adverse_reaction_req).
+                        success(function (data, status, headers, config) {
+
+                            var reactions = [];
+                            var i;
+                            for (i = data.results.length - 1; i >= 0; i--) {
+                                reactions.push(data.results[i].term);
+                            }
+
+                            var reactions_counts = [];
+                            for (i = data.results.length - 1; i >= 0; i--) {
+                                reactions_counts.push(data.results[i].count);
+                            }
+
+                            $scope.arObj = {
+                                height: 400,
+                                width:600,
+                                type: 'hbar',
+                                "plot": {
+                                    "selection-mode": "plot",
+                                    "background-mode": "none",
+                                    "selected-state": {
+                                        "background-color": "#900 #f90",
+                                        "border-color": "#999",
+                                        "border-width": 1
+                                    },
+                                    "bar-width": "15px",
+                                    "bar-space": "10px"
+                                },
+                                "scale-x": {
+                                    "values": reactions,
+                                    "max-items": reactions.length,
+                                    "items-overlap": true,
+
+                                    "guide": {
+                                        "visible": false
+                                    }
+
+
+                                },
+
+                                series: [
+                                    {
+                                        "values": reactions_counts,
+                                        "labels": reactions,
+                                        "tooltip": {
+                                            "text": "%kl - %v occurances"
+                                        }
+
+                                    },
+
+                                ]
+                            };
+
+                        }).
+                        error(function (data, status, headers, config) {
+                            $scope.results = [];
+                            console.log("Error while retrieving data")
+                        });
+
+                $scope.$watch(function (scope) {
+                            return scope.selected_reaction
+                        },
+                        function (newValue, oldValue) {
+                            console.log("newValue = " + newValue + " oldValue = " + oldValue);
+                            if (newValue) {
+                                var adverse_reaction_product_req = {
+                                    method: 'GET',
+                                    url: 'https://api.fda.gov/drug/event.json',
+                                    params: {
+                                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
+                                        count: 'patient.drug.medicinalproduct.exact',
+                                        limit: '10',
+                                        search: 'patient.reaction.reactionmeddrapt:"' + newValue + '"'
+                                    }
+                                }
+
+                                $http(adverse_reaction_product_req).
+                                        success(function (data, status, headers, config) {
+
+                                            var products = [];
+                                            var i;
+                                            for (i = 0; i < data.results.length; i++) {
+                                                products.push(data.results[i].term);
+                                            }
+
+                                            var products_counts = [];
+                                            for (i = 0; i < data.results.length; i++) {
+                                                products_counts.push(data.results[i].count);
+                                            }
+
+                                            $scope.productsObj = {
+                                                height: 400,
+                                                width:400,
+                                                "type": 'bar',
+                                                "plot": {
+                                                    "selection-mode": "none"
+                                                },
+                                                "scale-x": {
+                                                    "values": products,
+                                                    "max-items": products.length,
+                                                    "items-overlap": true,
+                                                    "item": {
+                                                        "font-angle": -45,
+                                                        "auto-align": true
+                                                    },
+                                                    "guide": {
+                                                        "visible": false
+                                                    }
+
+
+                                                },
+
+                                                series: [
+                                                    {
+                                                        "values": products_counts,
+                                                        "labels": products,
+                                                        "tooltip": {
+                                                            "text": "%kl - %v occurances of " + $scope.selected_reaction
+                                                        }
+                                                    },
+
+                                                ]
+                                            };
+
+                                        }).
+                                        error(function (data, status, headers, config) {
+                                            $scope.results = [];
+                                            console.log("Error while retrieving data")
+                                        });
+                            }
+                        })
+                $scope.$watch(function (scope) {
+                            return scope.selected_product
+                        },
+                        function (newValue, oldValue) {
+                            if (newValue) {
+                                var gender_distribution_req = {
+                                    method: 'GET',
+                                    url: 'https://api.fda.gov/drug/event.json',
+                                    params: {
+                                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
+                                        count: 'patient.patientsex',
+                                        search: '(patient.reaction.reactionmeddrapt:"' + $scope.selected_reaction + '") AND (patient.drug.medicinalproduct:"' + newValue + '")'
+                                    }
+                                }
+
+                                var gender = ["Unknown", "Male", "Female"]
+                                $http(gender_distribution_req).
+                                        success(function (data, status, headers, config) {
+
+                                            var i;
+                                            series_data = [];
+                                            for (i = 0; i < data.results.length; i++) {
+                                                series_data.push({
+                                                    "text": gender[data.results[i].term],
+                                                    "values": [data.results[i].count]
+                                                });
+                                            }
+
+                                            $scope.genderObj = {
+                                                height: 400,
+                                                width:400,
+                                                "type": "pie",
+                                                "series": series_data
+                                            };
+
+                                        }).
+                                        error(function (data, status, headers, config) {
+                                            $scope.results = [];
+                                            console.log("Error while retrieving data")
+                                        });
+                            }
+                        });
+
+
+                zingchart.bind("adverse-reactions-chart", "node_click", function (p) {
+                    console.log(p);
+                    $scope.selected_reaction = p.scaletext;
+                    $scope.selected_product = false;
+                    $scope.$digest();
+                });
+
+                zingchart.bind("products-chart", "node_click", function (p) {
+                    console.log(p);
+                    $scope.selected_product = p.scaletext;
+                    $scope.$digest();
+                });
+            }])
+
+
+</script>
+
+</body>
+</html>

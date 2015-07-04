@@ -1,0 +1,21 @@
+{
+  "name": "bower",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mayuresh/openfda-prototype",
+  "authors": [
+    "mayuresh <mayuresh@gmail.com>"
+  ],
+  "description": "Prototype with data from https://open.fda.gov",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "zingchart-angularjs": "~1.0.1"
+  }
+}

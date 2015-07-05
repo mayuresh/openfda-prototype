@@ -125,7 +125,14 @@
                                 "subtitle" : {
                                     "text": "Click on a bar to get breakdown of drugs causing the reaction"
                                 },
+                                "plotarea": {
+                                    "margin-left": "110px",
+                                    "border": "none"
+                                },
                                 "plot": {
+                                    "value-box":{
+                                        "visible":true
+                                    },
                                     "selection-mode": "plot",
                                     "background-mode": "none",
                                     "selected-state": {
@@ -298,7 +305,7 @@
                                                 width: 350,
                                                 "type": "pie",
                                                 "title": {
-                                                    "text": "Gender distribution for adverse reaction " + $scope.selected_reaction + "\n caused by " + $scope.selected_product,
+                                                    "text": "Gender distribution for " + $scope.selected_reaction + "\n caused by " + $scope.selected_product,
                                                     backgroundColor:"#3498db",
                                                     fontFamily:"Helvetica",
                                                     alpha:0.8,
@@ -307,6 +314,9 @@
                                                 },
 
                                                 "plot": {
+                                                    "value-box":{
+                                                        "visible":true
+                                                    },
                                                     "slice": 40,
                                                     "shadow": 0,
 

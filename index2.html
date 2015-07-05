@@ -26,54 +26,43 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
+
+            <a class="navbar-brand" href="#">Visualizing FDA data</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-        <!--/.nav-collapse -->
+
     </div>
 </nav>
 
 <div class="container" ng-controller="BarCtrl">
-
+    <div class="col-lg-10">
+        <h1>Visualizing data for adverse drug reactions</h1>
+        <p>
+            The graphical analysis presents the top ten adverse reactions reported.<br /><br />
+            While the reports to FDA do not require that a causal relationship between a product and
+            event be proven, and reports do not always contain enough detail to properly evaluate an event,
+            we have provided the drill down on each adverse reaction to reflect the occurrence of SUSPECT drug
+            reported in the adverse action report.<br /><br />
+            We have further provided drill down on each drug to show the gender wise impact reported for the drug.
+        </p>
+    </div>
     <div class="starter-template">
 
-        <div class="col-lg-8 ng-scope" id="adverse-reaction-bar-chart">
-            <div class="panel panel-default">
-                <div class="panel-heading">Top 10 types of adverse reactions to drugs</div>
-                <div class="panel-body">
-                    <zingchart id="adverse-reactions-chart" zc-json="arObj"></zingchart>
-                </div>
-            </div>
+        <div class="col-lg-4 ng-scope" id="adverse-reaction-bar-chart">
+
+            <zingchart id="adverse-reactions-chart" zc-json="arObj"></zingchart>
         </div>
 
-        <div class="col-lg-6 ng-scope" id="products-bar-chart" ng-show="selected_reaction">
-            <div class="panel panel-default">
-                <div class="panel-heading">Drugs causing the reaction - {{ selected_reaction }}</div>
-                <div class="panel-body">
-                    <zingchart id="products-chart" zc-json="productsObj"></zingchart>
-                </div>
-            </div>
+
+        <div class="col-lg-4 ng-scope" id="products-bar-chart" ng-show="selected_reaction">
+
+            <zingchart id="products-chart" zc-json="productsObj"></zingchart>
+
         </div>
-        <div class="col-lg-6 ng-scope" id="patient-pie-chart" ng-show="selected_product">
-            <div class="panel panel-default">
-                <div class="panel-heading">Gender distribution for adverse reaction {{ selected_reaction }} for drug {{ selected_product }}</div>
-                <div class="panel-body">
-                    <zingchart id="gender-pie-chart" zc-json="genderObj"></zingchart>
-                </div>
-            </div>
+
+        <div class="col-lg-4 ng-scope" id="patient-pie-chart" ng-show="selected_product">
+
+            <zingchart id="gender-pie-chart" zc-json="genderObj"></zingchart>
+
         </div>
     </div>
 
@@ -123,8 +112,19 @@
 
                             $scope.arObj = {
                                 height: 400,
-                                width:600,
+                                width: 350,
                                 type: 'hbar',
+                                "title": {
+                                    "text": "Types of adverse reactions",
+                                    backgroundColor:"#3498db",
+                                    fontFamily:"Helvetica",
+                                    alpha:0.8,
+                                    fontWeight:"none",
+                                    borderBottom:"2px solid #2980b9"
+                                },
+                                "subtitle" : {
+                                    "text": "Click on a bar to get breakdown of drugs causing the reaction"
+                                },
                                 "plot": {
                                     "selection-mode": "plot",
                                     "background-mode": "none",
@@ -138,8 +138,12 @@
                                 },
                                 "scale-x": {
                                     "values": reactions,
+                                    "label":{
+                                        "text":"Adverse Reactions"
+                                    },
                                     "max-items": reactions.length,
                                     "items-overlap": true,
+                                    "auto-fit": true,
 
                                     "guide": {
                                         "visible": false
@@ -200,10 +204,29 @@
 
                                             $scope.productsObj = {
                                                 height: 400,
-                                                width:400,
+                                                width: 350,
                                                 "type": 'bar',
+                                                "title": {
+                                                    "text": "Drugs causing " + $scope.selected_reaction,
+                                                    backgroundColor:"#3498db",
+                                                    fontFamily:"Helvetica",
+                                                    alpha:0.8,
+                                                    fontWeight:"none",
+                                                    borderBottom:"2px solid #2980b9"
+                                                },
+                                                "subtitle" : {
+                                                    "text": "Click on a bar to view gender distribution for reactions"
+                                                },
                                                 "plot": {
-                                                    "selection-mode": "none"
+                                                    "selection-mode": "plot",
+                                                    "background-mode": "none",
+                                                    "selected-state": {
+                                                        "background-color": "#900 #f90",
+                                                        "border-color": "#999",
+                                                        "border-width": 1
+                                                    },
+                                                    "bar-width": "15px",
+                                                    "bar-space": "10px"
                                                 },
                                                 "scale-x": {
                                                     "values": products,
@@ -254,7 +277,9 @@
                                     }
                                 }
 
-                                var gender = ["Unknown", "Male", "Female"]
+                                var gender = ["Unknown", "Male", "Female"];
+                                var color = ["#55FF55", "#FF5555", "#5555FF"];
+
                                 $http(gender_distribution_req).
                                         success(function (data, status, headers, config) {
 
@@ -263,14 +288,29 @@
                                             for (i = 0; i < data.results.length; i++) {
                                                 series_data.push({
                                                     "text": gender[data.results[i].term],
-                                                    "values": [data.results[i].count]
+                                                    "values": [data.results[i].count],
+                                                    "background-color": color[data.results[i].term]
                                                 });
                                             }
 
                                             $scope.genderObj = {
                                                 height: 400,
-                                                width:400,
+                                                width: 350,
                                                 "type": "pie",
+                                                "title": {
+                                                    "text": "Gender distribution for adverse reaction " + $scope.selected_reaction + "\n caused by " + $scope.selected_product,
+                                                    backgroundColor:"#3498db",
+                                                    fontFamily:"Helvetica",
+                                                    alpha:0.8,
+                                                    fontWeight:"none",
+                                                    borderBottom:"2px solid #2980b9"
+                                                },
+
+                                                "plot": {
+                                                    "slice": 40,
+                                                    "shadow": 0,
+
+                                                },
                                                 "series": series_data
                                             };
 

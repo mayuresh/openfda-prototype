@@ -26,6 +26,7 @@ angular.module('app',['openFDASvc','StateMap'])
 						results[entry.term.toUpperCase()] = entry.count;
 					}
 					console.log(totalCount, maxData, minData);
+					$scope.results = results;
 					drawStates(results,totalCount, maxData, minData);
 				});
 		}
@@ -36,6 +37,7 @@ angular.module('app',['openFDASvc','StateMap'])
 			var ratio = 255/ diff;
 			// console.log(data);
 			var rootElement = angular.element(document.querySelector('#usstates'));
+			var getColor = d3.interpolate("#ffccff", "#ff0000");
 			rootElement.empty();
 			for (s in states) {
 				var state = states[s];
@@ -54,13 +56,27 @@ angular.module('app',['openFDASvc','StateMap'])
 
 				var fill = "#ffffff";
 				if (dataPoint)
-					fill = d3.interpolate("#ffccff", "#ff0022")(dataPoint/255);
+					fill = getColor(dataPoint/maxData);
 				path.attr('style', 'fill: ' + fill + ';');
 
 				g.append(title);
 				g.append(path);
 				rootElement.append(g);
+
+				var tPath = document.querySelector("#" + state.id + " path");
+				addText(tPath, state.id, dataPoint);
 			}
+		}
+
+		var addText = function(path, name, count) {
+			var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		    var b = path.getBBox();
+		    t.setAttribute("transform", "translate(" + (b.x + b.width/2) + " " + (b.y + b.height/2) + ")");
+		    t.textContent = name;
+		    // if (count) t.textContent = count;
+		    // t.setAttribute("fill", "red");
+		    t.setAttribute("font-size", "10");
+		    path.parentNode.insertBefore(t, path.nextSibling);
 		}
 
 		var showLegend = function() {
@@ -74,7 +90,7 @@ angular.module('app',['openFDASvc','StateMap'])
 			grd.addColorStop(0, '#ffffff');
 			grd.addColorStop(0.05, '#ffccff');
 			// dark blue
-			grd.addColorStop(1, '#ff0022');
+			grd.addColorStop(1, '#ff0000');
 			context.fillStyle = grd;
 			context.fill();
 		}

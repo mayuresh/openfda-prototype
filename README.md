@@ -18,3 +18,5 @@ To find the IP address of the container
     docker ps => gives the container id 
     docker inspect <container id> | grep IPAddress => gives IP address
     docker exec <container id> /bin/bash => gives the contents in the docker image
+
+test

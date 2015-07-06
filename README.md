@@ -1,6 +1,7 @@
-# openfda-prototype
+# Visualizing data for adverse drug reactions by [XYZ Inc.](http://xyz.com)  
 
-Demo at http://mayuresh.github.io/openfda-prototype/index2.html
+See the Live Demo at  http://mayuresh.github.io/openfda-prototype/index2.html
+
 
 Prototype built using data from https://open.fda.gov 
 

@@ -33,13 +33,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Project name</a>
+            <a class="navbar-brand" href="index.html">Visualizing FDA data</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="index2.html">Adverse reations to drugs</a></li>
+                <li><a href="index3.html">Food recall</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -49,15 +49,9 @@
 
     <div class="starter-template">
         <h1>Visualization</h1>
+<p>
 
-        <div class="col-lg-8 col-sm-12 ng-scope" id="bar-chart" ng-controller="BarCtrl">
-            <div class="panel panel-default">
-                <div class="panel-heading">Top substances used in drugs labelled as "External Use Only"</div>
-                <div class="panel-body">
-                    <zingchart id="chart-1" zc-json="myObj"></zingchart>
-                </div>
-            </div>
-        </div>
+</p>
     </div>
 
 
@@ -69,83 +63,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <script src='http://cdn.zingchart.com/zingchart.min.js'></script>
-    <script src="bower_components/zingchart-angularjs/src/zingchart-angularjs.js"></script>
-
-
-<script>
-    angular.module('myApp', ['zingchart-angularjs'])
-            .controller("BarCtrl", ['$scope', '$http', function ($scope, $http) {
-                var req = {
-                    method: 'GET',
-                    url: 'https://api.fda.gov/drug/label.json',
-                    params: {
-                        api_key: 'pwf1NjqoKDItYyTxb8FHoCft9J2sij1paFwLJOTN',
-                        search: 'warnings:"For+external+use+only"',
-                        count: 'openfda.substance_name.exact',
-                        limit: '10'
-                    }
-                }
-
-                $http(req).
-                        success(function(data, status, headers, config) {
-                            $scope.results = data.results;
-                            var labels = [];
-                            var i;
-                            for (i = 0; i < $scope.results.length; i++) {
-                                labels.push($scope.results[i].term);
-                            }
-
-                            var counts = [];
-                            for (i = 0; i < $scope.results.length; i++) {
-                                counts.push($scope.results[i].count);
-                            }
-
-                            $scope.myObj = {
-                                type : 'bar',
-                                "scale-x":{
-                                    "values": labels,
-                                    "max-items":labels.length,
-                                    "items-overlap":true,
-                                    "item":{
-                                        "font-angle":-45,
-                                        "auto-align":true
-                                    },
-                                    "guide":{
-                                        "visible":false
-                                    }
-
-
-                                },
-                                series:[
-                                    {
-                                        "values": counts,
-                                        "labels": labels,
-                                        "tooltip": {
-                                          "text": "%kl - %v"
-                                        },
-                                        "backgroundColor" : "#007777"
-                                    },
-
-                                ]
-                            };
-
-                        }).
-                        error(function(data, status, headers, config) {
-                            $scope.results = [];
-                            console.log("Error while retrieving data")
-                        });
-
-
-
-            }]);
-
-    zingchart.node_click = function(p) {
-        console.log(p);
-        alert("Series : " + p.plotindex + " Node :" + p.nodeindex);
-    }
-
-</script>
 
 </body>
 </html>

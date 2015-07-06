@@ -45,7 +45,7 @@ angular.module('app',['openFDASvc','StateMap'])
 				var path = angular.element(document.createElementNS('http://www.w3.org/2000/svg','path'));
 				path.attr('d', state.d);
 				path.attr('class', 'state');
-				var dataPoint = data[state.id];				
+				var dataPoint = data[state.id];
 				if (dataPoint) {
 					title.text(state.n + " : " + dataPoint);
 				} else {
@@ -54,14 +54,30 @@ angular.module('app',['openFDASvc','StateMap'])
 
 				var fill = "#ffffff";
 				if (dataPoint)
-					fill = d3.interpolate("#ffccff", "#ff4499")(dataPoint/255);
+					fill = d3.interpolate("#ffccff", "#ff0022")(dataPoint/255);
 				path.attr('style', 'fill: ' + fill + ';');
 
 				g.append(title);
 				g.append(path);
 				rootElement.append(g);
 			}
+		}
 
+		var showLegend = function() {
+			var canvas = document.getElementById('myCanvas');
+			var context = canvas.getContext('2d');
+			context.rect(0, 0, canvas.width, canvas.height);
+
+			// add linear gradient
+			var grd = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+			// light blue
+			grd.addColorStop(0, '#ffffff');
+			grd.addColorStop(0.05, '#ffccff');
+			// dark blue
+			grd.addColorStop(1, '#ff0022');
+			context.fillStyle = grd;
+			context.fill();
 		}
 		$scope.reload();
+		showLegend();
 	});

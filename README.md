@@ -1,10 +1,21 @@
 # openfda-prototype
 
-Demo at http://mayuresh.github.io/openfda-prototype/index2.html
+Demo at http://mayuresh.github.io/openfda-prototype/index.html
 
 Prototype built using data from https://open.fda.gov 
 
-You can build the application using "gulp build" and run the application in an node.js express server using "gulp serve".
+** Steps to build the app
+`
+npm install
+gulp build
+`
+
+** Steps to run the app
+`
+gulp serve
+`
+
+** Steps to create Docker container and run application in Docker container
 
 The DockerFile also is able to create all dependencies and run "gulp serve"
 

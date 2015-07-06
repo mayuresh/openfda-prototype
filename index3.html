@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/d3/d3.js"></script>
+    <script type="text/javascript" src="scripts/services/openFDASvc.js"></script>
+    <script type="text/javascript" src="scripts/services/FoodEnforcement.js"></script>
+    <script type="text/javascript" src="scripts/services/StateMap.js"></script>
+    <script type="text/javascript" src="scripts/services/main.js"></script>
+    <style type="text/css">
+        .state {
+            fill: #E0E0E0;
+            stroke: #646464;
+            stroke-width: 1;
+            stroke-opacity: 1;
+        }
+
+        .territory {
+            opacity: 0;
+            fill: #E0E0E0;
+            stroke: #646464;
+            stroke-width: 1;
+            stroke-opacity: 1;
+        }
+
+        .territoryborder {
+            opacity: 0;
+            fill: none;
+            stroke: #A9A9A9;
+            stroke-width: 2;
+        }
+
+        .border {
+            opacity: 1;
+            fill: none;
+            stroke: #A9A9A9;
+            stroke-width: 2;
+        }
+
+        .circle {
+            opacity: 1;
+            fill: #E0E0E0;
+            stroke: #646464;
+            stroke-width: 1;
+        }
+    </style>
+    <!-- Bootstrap core css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+</head>
+<body ng-app="app">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Visualizing FDA data</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index2.html">Adverse reations to drugs</a></li>
+                <li class="active"><a href="index3.html">Food recall</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container" ng-controller="mainCtrl">
+    <div class="col-lg-10">
+        <br /><br /><br />
+        <h1>Food recall enforcement report</h1>
+
+        <h2>Distribution across states</h2>
+
+        <form>Reason for recall : <input type="text" ng-model="criteria"></text>
+            <button type="submit" ng-click="reload();">Reload</button>
+        </form>
+        <br>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="959" height="593" id="usstates"></svg>
+    </div>
+</div>
+</body>
+</html>

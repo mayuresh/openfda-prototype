@@ -1,0 +1,1 @@
+angular.module('adverseReactionApp', ['zingchart-angularjs']);

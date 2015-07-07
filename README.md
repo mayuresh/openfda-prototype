@@ -77,9 +77,18 @@ Following Frameworks were used for building this Prototype
 ### Deployment
 Dockerfile was defined along with the Source Code. On the Development environment Docker Container was built and pushed to docker hub. On the Digital Ocean Production machine, a Docker Machine was procured and Container Image was pulled and run.
 
+```
+Docker Image - https://registry.hub.docker.com/u/anilallewar/openfda-prototype/
+```
+
+#### Instructions to Deploy Docker Image
+
+* Procure a Machine with Docker Installed. e.g Docker Droplet on DigitalOcean
+* $>docker pull anilallewar/openfda-prototype
+* $>docker run -d -p 80:8000 anilallewar/openfda-prototype
 
 
-
+Open the url http://&lt;&lt;ip addresss&gt;&gt;/index.html in browser
 
 
 

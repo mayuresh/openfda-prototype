@@ -4,3 +4,4 @@ dist/
 .idea
 bower_components/
 dist/
+newrelic_agent.log

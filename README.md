@@ -1,11 +1,10 @@
-# Visualizing data for Adverse Drug Reactions 
+# Visualizing data for Adverse Drug Reactions by [Vector Consulting](http://www.vectorconsulting.com/)
 
 ## Live Prototype
 [Click here to view the prototype](http://162.243.149.238/index.html)
 
 ## Description
-This tool presents the top ten adverse reactions reported. While the reports to FDA do not require that a causal relationship between a product and event be proven, and reports do not always contain enough detail to properly evaluate an event, we have provided the drill down on each adverse reaction to reflect the occurrence of SUSPECT drug reported in the adverse action report.
-Prototype built using data from https://open.fda.gov 
+This tool presents the top ten adverse reactions reported. While the reports to FDA do not require that a causal relationship between a product and event be proven, and reports do not always contain enough detail to properly evaluate an event, we have provided the drill down on each adverse reaction to reflect the occurrence of SUSPECT drug reported in the adverse action report. The intent was to explore, understand and consume as many APIs related to adverse reaction and come up with an analytics solution that gives meaningful insight to further identify area of research. Prototype was built using data from https://open.fda.gov . 
 
 ## Source code
 
@@ -19,9 +18,10 @@ The container image for the prototype can be found - https://registry.hub.docker
 
 ## Approach (750 Word Limit):
 
-In this phase we went through the available apis and interviewed sample users to come up with use case that would be helpful to our users. We came up with the usecase of finding top 10 list of "Adverse drug reactions" and "Drugs that could casue those reactions".
+In this phase we went through the available apis and interviewed sample users to come up with a use case that would demo a solution that provides meaningful insight into the adverse reaction data. The use case described above provides drill down exploration capability from list of "Adverse drug reactions" to list of drugs that caused those reactions.
 
 While building the prototype, we followed "US Digital Services Playbook" as our guide to ensure we deliver successful Agile Service prototype.
+
 
 ### Requirements
 Our requirements began looking at the API of openFDA and understanding the capabilities of the system. This was followed by identifying a set of users and conducting the interviews. The data from the interviews and the research on the APIs lead us to requirements for "Visualizing data for adverse drug reactions". Next step was to identify the User Stories on an Internal Jira Server. These User Stories also recorded Functionality, Usability 508 compliance, Security and Technical considerations of the feature.
@@ -39,8 +39,7 @@ as evidenced by commits made by developers and devops engineer to the https://gi
 
 ### User Experince Design
 One of our experienced Team member analysed the end to end requirements, and proposed an high level flow of the Application. This was followed by quick picture based mockups and finally a working mockup in HTML5. Our overall design was inspired by industry UI Conventions by Twitter BootStrap and Zurb Foundation. 
-
-One of the key requirements which was note was to ensure the UI is responsive and excessive by any Modern Smartphone browsers.
+One of the key requirements was to ensure the UI is responsive and accessible by any Modern Smartphone browsers and we think it meets the requirements
 
 ### Technical Design
 

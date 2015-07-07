@@ -26,6 +26,17 @@ While building the prototype, we followed "US Digital Services Playbook" as our 
 ### Requirements
 Our requirements began looking at the API of openFDA and understanding the capabilities of the system. This was followed by identifying a set of users and conducting the interviews. The data from the interviews and the research on the APIs lead us to requirements for "Visualizing data for adverse drug reactions". Next step was to identify the User Stories on an Internal Jira Server. These User Stories also recorded Functionality, Usability 508 compliance, Security and Technical considerations of the feature.
 
+### Team:
+
+The team included 
+ *	One Architect (Rohit Ghatol), 
+ *	Two Frontend Developers (Mayuresh Phadke and Nikhil Walvekar) and 
+ * One Devops Engineer (Anil Allewar) 
+ 
+The team was lead by Mayuresh Phadke. Each team member contributed to the Git repository.
+as evidenced by commits made by developers and devops engineer to the https://github.com/mayuresh/openfda-prototype/commits/master .
+
+
 ### User Experince Design
 One of our experienced Team member analysed the end to end requirements, and proposed an high level flow of the Application. This was followed by quick picture based mockups and finally a working mockup in HTML5. Our overall design was inspired by industry UI Conventions by Twitter BootStrap and Zurb Foundation. 
 

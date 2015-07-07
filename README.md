@@ -33,18 +33,33 @@ One of the key requirements which was note was to ensure the UI is responsive an
 
 ### Technical Design
 
-The first step was to determine top 10 adverse reactions.  The query returns medicine name as “term” and the count. No options was available to apply order by but removing the limit indicated that the results returned are in descending order. It returned the datain descending order.
+The first step was to determine top 10 adverse reactions.  The query returns medicine name as “term” and the count. No options was available to apply order by but removing the limit indicated that the results returned are in descending order. It returned the data in descending order.
+
+```
 https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1&limit=10&count=patient.drug.medicinalproduct.exact
+```
+
 Once we chose the drug, we can drill down to the male participants(patientsex = 1 fr male; patientsex=2 for female and patientsex=0 for Unknown) using the URL format below.
+
+```
 https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1+AND+patient.drug.medicinalproduct:"ASPIRIN"+AND+patient.patientsex:1&limit=10
+```
+
 Since the API doesn’t permit returning all, we used combination of limit and skip to paginate the results. In the example below, the results would skip the first 100 records and give the next 10.
+
+```
 https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1+AND+patient.drug.medicinalproduct:%22ASPIRIN%22+AND+patient.patientsex:1&limit=10&skip=100
+```
+
 These are the other serious parameters that can be used in the first filter
+
+```
 https://api.fda.gov/drug/event.json?search=seriousnessdeath:1
 https://api.fda.gov/drug/event.json?search=seriousnesscongenitalanomali:1
 https://api.fda.gov/drug/event.json?search=receivedate:[2004-01-01+TO+2015-07-04]+AND+seriousnesscongenitalanomali:1
 https://api.fda.gov/drug/event.json?search=seriousnessdisabling:1
 https://api.fda.gov/drug/event.json?search=seriousnesshospitalization:1
+```
 
 We choose to keep the Design as Simple as Possible, using industry conventions for rapid development and low cost. 
 Following Frameworks were used for building this Prototype

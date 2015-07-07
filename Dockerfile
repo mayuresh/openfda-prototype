@@ -13,6 +13,7 @@ WORKDIR /home/openfda
 ADD package.json /home/openfda/package.json
 ADD bower.json /home/openfda/bower.json
 ADD gulpfile.js /home/openfda/gulpfile.js
+ADD newrelic.js /home/openfda/newrelic.js
 
 # Note that we need all the packages 
 ADD ./dist /home/openfda/dist

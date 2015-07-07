@@ -6,7 +6,8 @@ var gulp = require("gulp"),
     livereload = require('connect-livereload'),
     lrserver = require('tiny-lr')(), //create an instance of the live reload server
     refresh = require('gulp-livereload'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    newrelic= require('newrelic');
 
 var serverport = 8000,
     livereloadport = 37656;

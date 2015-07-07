@@ -1,7 +1,7 @@
 # Visualizing data for Adverse Drug Reactions 
 
 ## Live Prototype
-[Click here to view the prototype](http://mayuresh.github.io/openfda-prototype/index2.html)
+[Click here to view the prototype](http://162.243.149.238/index.html)
 
 ## Description
 This tool presents the top ten adverse reactions reported. While the reports to FDA do not require that a causal relationship between a product and event be proven, and reports do not always contain enough detail to properly evaluate an event, we have provided the drill down on each adverse reaction to reflect the occurrence of SUSPECT drug reported in the adverse action report.
@@ -32,6 +32,20 @@ One of our experienced Team member analysed the end to end requirements, and pro
 One of the key requirements which was note was to ensure the UI is responsive and excessive by any Modern Smartphone browsers.
 
 ### Technical Design
+
+The first step was to determine top 10 adverse reactions.  The query returns medicine name as “term” and the count. No options was available to apply order by but removing the limit indicated that the results returned are in descending order. It returned the datain descending order.
+https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1&limit=10&count=patient.drug.medicinalproduct.exact
+Once we chose the drug, we can drill down to the male participants(patientsex = 1 fr male; patientsex=2 for female and patientsex=0 for Unknown) using the URL format below.
+https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1+AND+patient.drug.medicinalproduct:"ASPIRIN"+AND+patient.patientsex:1&limit=10
+Since the API doesn’t permit returning all, we used combination of limit and skip to paginate the results. In the example below, the results would skip the first 100 records and give the next 10.
+https://api.fda.gov/drug/event.json?search=seriousnesslifethreatening:1+AND+patient.drug.medicinalproduct:%22ASPIRIN%22+AND+patient.patientsex:1&limit=10&skip=100
+These are the other serious parameters that can be used in the first filter
+https://api.fda.gov/drug/event.json?search=seriousnessdeath:1
+https://api.fda.gov/drug/event.json?search=seriousnesscongenitalanomali:1
+https://api.fda.gov/drug/event.json?search=receivedate:[2004-01-01+TO+2015-07-04]+AND+seriousnesscongenitalanomali:1
+https://api.fda.gov/drug/event.json?search=seriousnessdisabling:1
+https://api.fda.gov/drug/event.json?search=seriousnesshospitalization:1
+
 We choose to keep the Design as Simple as Possible, using industry conventions for rapid development and low cost. 
 Following Frameworks were used for building this Prototype
 
@@ -41,6 +55,9 @@ Following Frameworks were used for building this Prototype
 * [D3JS Visualization Framework] (http://d3js.org/) - For Data Visualization
 * [Gulp](http://gulpjs.com/) - Build tool for Javascript world
 * [Docker](https://www.docker.com/) - For Running the "Adverse Drug Reactions" Docker Image
+
+
+
  
 ### Deployment
 Dockerfile was defined along with the Source Code. On the Development environment Docker Container was built and pushed to docker hub. On the Digital Ocean Production machine, a Docker Machine was procured and Container Image was pulled and run.

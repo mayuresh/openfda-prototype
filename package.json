@@ -25,6 +25,7 @@
     "gulp-docker": "0.0.11",
     "gulp-livereload": "^3.8.0",
     "gulp-util": "^3.0.6",
+    "newrelic": "^1.20.2",
     "tiny-lr": "^0.1.6"
   },
   "dependencies": {

@@ -6,7 +6,7 @@ angular.module('app',['openFDASvc','StateMap'])
 		$scope.reload = function() {
 			var searchTerm = {};
 			if ($scope.criteria) {
-				searchTerm = {reason_for_recall:$scope.criteria};
+				searchTerm = {product_description:$scope.criteria};
 			}
 			FoodEnforcement.search(searchTerm, FoodEnforcement.FIELDS.state)
 				.then(function(data, status){
